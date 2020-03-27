@@ -1,0 +1,24 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: "traefik:v2.2.0"
+    container_name: "traefikv2"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8181:8181"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      # Traefik configuration
+      - "./config/traefik.yaml:/etc/traefik/traefik.yaml:ro" 
+      # Lets encrypt certificates
+      - "./config/acme.json:/acme.json"
+      # Place your custom rules here
+      - ./rules:/rules:ro
+    restart: always
+    networks:
+      - traefikv2
+networks:
+  traefikv2:
+    external: true

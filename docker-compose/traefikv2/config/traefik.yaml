@@ -1,0 +1,38 @@
+
+entryPoints:
+  http:
+    address: ":80"
+
+  https:
+    address: ":443"
+
+  traefik:
+    address: ":8181"
+
+api:
+  insecure: true
+  dashboard: true
+
+serversTransport:
+  insecureSkipVerify: true
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    network: traefikv2 # Change this to your network name
+    watch: true
+  file:
+    directory: /rules
+    watch: true
+
+certificatesresolvers:
+  letsencrypt:
+    acme:
+      email: INSERT_EMAIL_HERE
+      storage: ./acme.json
+      tlsChallenge: true
+      # Comment the line below when you are sure that your letsencrypt config is working
+      # Else you will hit the letsencrypt rate limit pretty fast, which is bad
+      # Until you comment this line, a fake CA will issue your cert, so don't wonder
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
